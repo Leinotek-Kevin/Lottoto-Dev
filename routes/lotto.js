@@ -5,7 +5,8 @@ router.use((req, res, next) => {
   next();
 });
 
-router.getNewestNumbers("/newest", async (req, res) => {
+//獲取最新的開獎獎號
+router.get("/newest", async (req, res) => {
   return res.send("成功連結 lotto route");
 });
 
