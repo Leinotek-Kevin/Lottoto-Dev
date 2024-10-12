@@ -7,7 +7,10 @@ router.use((req, res, next) => {
 
 //獲取最新的開獎獎號
 router.get("/newest", async (req, res) => {
-  return res.send("成功連結 lotto route");
+  return res.send({
+    status: true,
+    message: "成功獲取",
+  });
 });
 
 module.exports = router;
