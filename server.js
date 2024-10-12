@@ -9,6 +9,8 @@ const cors = require("cors");
 const { fortune } = require("./routes");
 const port = process.env.PORT || 8080;
 
+require("./service/newest-service");
+
 //連結 mongoDB
 mongoose
   .connect(process.env.MONGODB_CONNECTION)
