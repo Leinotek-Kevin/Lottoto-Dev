@@ -9,7 +9,10 @@ const cors = require("cors");
 const port = process.env.PORT || 8080;
 
 const admin = require("firebase-admin");
-const serviceAccount = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS);
+const serviceAccount =
+  port == 8080
+    ? require("./google-account-key.json")
+    : JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS);
 
 require("./service/newest-service");
 
