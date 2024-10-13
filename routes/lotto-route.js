@@ -34,7 +34,7 @@ router.get("/newest", async (req, res) => {
 });
 
 //清除資料並重新抓取開獎資料
-router.post("/crawer-newest", async (req, res) => {
+router.get("/crawer-newest", async (req, res) => {
   const result = await Newest.deleteMany({});
   newestCrawer();
   return res.status(200).send({ status: true, message: "爬蟲資料成功" });
