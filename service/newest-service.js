@@ -12,6 +12,8 @@ const startFetching = () => {
   const startHour = 1; //8PM
   console.log(
     "判斷參數：" +
+      now.getHours() +
+      " " +
       (now.getHours() === startHour) +
       " " +
       (now.getMinutes() >= 30) +
