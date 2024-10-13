@@ -10,16 +10,6 @@ const fetch = () => {
 const startFetching = () => {
   const now = new Date();
   const startHour = 1; //8PM
-  console.log(
-    "判斷參數：" +
-      now.getHours() +
-      " " +
-      (now.getHours() === startHour) +
-      " " +
-      (now.getMinutes() >= 30) +
-      " " +
-      !isFetching
-  );
 
   if (now.getHours() === startHour && now.getMinutes() >= 30 && !isFetching) {
     console.log("進入抓取時間範圍內");
