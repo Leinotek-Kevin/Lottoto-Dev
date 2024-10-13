@@ -9,16 +9,16 @@ const fetch = () => {
 //設定每天執行
 const startFetching = () => {
   const now = new Date();
-  const startHour = 20; //8PM
+  const startHour = 1; //8PM
 
-  if (now.getHours() === startHour && now.getMinutes() >= 30 && !isFetching) {
+  if (now.getHours() === startHour && now.getMinutes() >= 0 && !isFetching) {
     console.log("進入抓取時間範圍內");
     isFetching = true; //設定正在抓取
 
     //符合條件立即抓取一次
     fetch();
 
-    const interal = setInterval(fetch, 10 * 60 * 1000); //每10分鐘執行一次
+    const interal = setInterval(fetch, 2 * 60 * 1000); //每10分鐘執行一次
 
     //設定結束時間
     setTimeout(() => {
