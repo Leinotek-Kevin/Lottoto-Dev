@@ -13,7 +13,7 @@ const startFetching = () => {
 
   if (now.getHours() === startHour && now.getMinutes() >= 0 && !isFetching) {
     console.log("進入抓取時間範圍內");
-    isFetching = true; //設定正在抓取
+    //isFetching = true; //設定正在抓取
 
     //符合條件立即抓取一次
     fetch();
