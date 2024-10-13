@@ -1,4 +1,4 @@
 module.exports = {
-  lotto: require("./lotto"),
-  fortune: require("./fortune"),
+  lotto: require("./lotto-route"),
+  fortune: require("./fortune-route"),
 };

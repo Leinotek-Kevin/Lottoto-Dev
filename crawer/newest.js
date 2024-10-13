@@ -2,6 +2,8 @@ const Newest = require("../models/newest-model");
 const axios = require("axios");
 const cheerio = require("cheerio");
 
+const cloudmsg = require("../utils/cloudmsg-util");
+
 //大樂透累積金額
 const bigAmoutUrl = "https://www.pilio.idv.tw/ltobig/list.asp";
 //威力彩累積金額
@@ -185,27 +187,56 @@ const upsertLotteryInfo = async ({
   prizeAmount,
 }) => {
   try {
-    // 使用 upsert，查詢是否有相同的 type 和 issue，沒有則新增，有則更新
-    const result = await Newest.findOneAndUpdate(
-      { type, issue }, // 查詢條件
-      {
-        type, // 更新或插入的欄位
+    //先找尋資料庫是否有存在指定 type 的資料
+    const existingDoc = await Newest.findOne({ type });
+
+    if (existingDoc) {
+      // 如果有找到文件且資料庫的 issue 比 爬蟲下來的資料還要小
+      // 表示有最新資料需要被更新
+      // 如果找到文件，則進行更新
+      const result = await Newest.findOneAndUpdate(
+        { type, issue: { $lt: issue } },
+        {
+          type,
+          issue,
+          number,
+          specialNumber,
+          date,
+          prizeAmount,
+        },
+        {
+          new: true, // 返回更新後的文件
+        }
+      );
+
+      console.log(result ? "文件已更新" : "文件不需要更新");
+
+      // 發送推播
+      if (result) {
+        cloudmsg.sendMsgToTopic("newest", result);
+      }
+
+      return;
+    } else {
+      // 如果沒有找到文件，則直接插入新文件
+      const newDoc = await Newest.create({
+        type,
         issue,
         number,
         specialNumber,
         date,
         prizeAmount,
-      },
-      {
-        upsert: true, // 如果找不到就新增
-        new: true, // 返回更新後的文件
-        setDefaultsOnInsert: true, // 插入時應用預設值
-      }
-    );
+      });
 
-    console.log("成功更新或新增資料：", result);
-  } catch (error) {
-    console.error("更新或新增資料時發生錯誤：", error);
+      console.log("新文件已插入：", newDoc);
+
+      // 發送推播
+      if (newDoc) {
+        cloudmsg.sendMsgToTopic("newest", newDoc);
+      }
+    }
+  } catch (err) {
+    console.error("發生錯誤", err);
   }
 };
 

@@ -26,7 +26,8 @@ const newestSchema = new Schema({
   //特別號碼
   specialNumber: {
     type: String,
-    required: true,
+    default: "",
+    required: false,
   },
 
   //開獎日期
@@ -38,7 +39,8 @@ const newestSchema = new Schema({
   //獎金總額
   prizeAmount: {
     type: String,
-    required: true,
+    default: "",
+    required: false,
   },
 
   //更新時間
@@ -48,7 +50,10 @@ const newestSchema = new Schema({
   },
 });
 // 添加唯一複合索引
-newestSchema.index({ type: 1, issue: 1 }, { unique: true });
+// newestSchema.index({ type: 1, issue: 1 }, { unique: true });
+
+// 添加唯一索引
+newestSchema.index({ type: 1 }, { unique: true });
 
 //隱藏 _id,__v
 newestSchema.set("toJSON", {

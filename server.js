@@ -9,6 +9,9 @@ const cors = require("cors");
 const { fortune } = require("./routes");
 const port = process.env.PORT || 8080;
 
+const admin = require("firebase-admin");
+const serviceAccount = require("./secret/service-account-key.json");
+
 require("./service/newest-service");
 
 //連結 mongoDB
@@ -20,6 +23,11 @@ mongoose
   .catch((e) => {
     console.log(e);
   });
+
+//初始化 firebase admin
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+});
 
 //middlewares
 app.use(express.json());
