@@ -1,3 +1,4 @@
+const { response } = require("express");
 const admin = require("firebase-admin");
 const typeNames = ["大樂透", "威力彩", "今彩539", "", "", "三星彩", "四星彩"];
 
@@ -43,13 +44,18 @@ class CloudMsgService {
       topic: topic, // 指定主題
     };
 
+    let msgResult = "";
+
     // 發送到指定主題
     try {
       const response = await admin.messaging().send(message);
       console.log("推播主題成功" + message.notification.title, response);
+      msgResult = "成功推播";
     } catch (e) {
       console.log("推播主題失敗", e);
+      msgResult = "失敗推播 " + e;
     }
+    return msgResult;
   }
 }
 

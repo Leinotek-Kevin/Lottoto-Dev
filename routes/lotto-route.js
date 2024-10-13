@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const Newest = require("../models/newest-model");
 const newestCrawer = require("../crawer/newest");
+const cloudmsg = require("../utils/cloudmsg-util");
 
 router.use((req, res, next) => {
   console.log("正在接收一個跟樂透相關的 request");
@@ -34,10 +35,21 @@ router.get("/newest", async (req, res) => {
 });
 
 //清除資料並重新抓取開獎資料
-router.get("/crawer-newest", async (req, res) => {
+router.post("/crawer-newest", async (req, res) => {
   const result = await Newest.deleteMany({});
   newestCrawer();
   return res.status(200).send({ status: true, message: "爬蟲資料成功" });
+});
+
+router.get("/cloudmsg", async (req, res) => {
+  const result = await cloudmsg.sendMsgToTopic("newest", {
+    type: 0,
+    number: "1,2,3",
+  });
+
+  return res
+    .status(200)
+    .send({ status: true, message: "爬蟲資料成功", result });
 });
 
 //更新指定彩券類型資料(不會發推播)
