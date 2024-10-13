@@ -24,11 +24,6 @@ mongoose
     console.log(e);
   });
 
-//初始化 firebase admin
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-});
-
 //middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -41,4 +36,9 @@ app.use("/api/fortune", fortune);
 //監聽 http request
 app.listen(port, () => {
   console.log("後端伺服器聆聽中....");
+});
+
+//初始化 firebase admin
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
 });
