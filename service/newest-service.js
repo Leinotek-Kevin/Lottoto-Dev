@@ -27,7 +27,7 @@ const startFetching = () => {
       isFetching = false; //重置狀態
     }, 60 * 60 * 1000); //持續一小時
   } else {
-    console.log("當前不再抓取時間範圍內");
+    console.log("當前不再抓取時間範圍內" + isFetching);
   }
 };
 
