@@ -6,7 +6,6 @@ dotenv.config();
 const lottoRoute = require("./routes").lotto;
 const fortuneRoute = require("./routes").fortune;
 const cors = require("cors");
-const { fortune } = require("./routes");
 const port = process.env.PORT || 8080;
 
 const admin = require("firebase-admin");
@@ -31,7 +30,7 @@ app.use(cors());
 
 //Handle Router
 app.use("/api/lotto", lottoRoute);
-app.use("/api/fortune", fortune);
+app.use("/api/fortune", fortuneRoute);
 
 //監聽 http request
 app.listen(port, () => {
