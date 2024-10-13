@@ -9,7 +9,7 @@ const cors = require("cors");
 const port = process.env.PORT || 8080;
 
 const admin = require("firebase-admin");
-const serviceAccount = require("./secret/service-account-key.json");
+// const serviceAccount = require("./secret/service-account-key.json");
 
 require("./service/newest-service");
 
@@ -38,6 +38,6 @@ app.listen(port, () => {
 });
 
 //初始化 firebase admin
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-});
+// admin.initializeApp({
+//   credential: admin.credential.cert(serviceAccount),
+// });
