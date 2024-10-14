@@ -1,9 +1,11 @@
 const router = require("express").Router();
 const Newest = require("../models").newest;
 const Banner = require("../models").banner;
+const BonusPlacard = require("../models").bonusPlacard;
+const BonusInfo = require("../models").bonusInfo;
 const newestCrawer = require("../crawer/newest");
 
-//獲取最新的開獎獎號
+//A-1 獲取最新的開獎獎號
 router.get("/newest", async (req, res) => {
   try {
     const result = await Newest.find({}).sort({ type: 1 });
@@ -29,14 +31,7 @@ router.get("/newest", async (req, res) => {
   }
 });
 
-//清除資料並重新抓取開獎資料
-router.post("/crawer-newest", async (req, res) => {
-  const result = await Newest.deleteMany({});
-  newestCrawer();
-  return res.status(200).send({ status: true, message: "爬蟲資料成功" });
-});
-
-//更新指定彩券類型資料(不會發推播)
+//A-2 更新指定彩券類型資料(不會發推播)
 router.post("/update-newest", async (req, res) => {
   let { type, issue, number, specialNumber, date, prizeAmount } = req.body;
 
@@ -73,7 +68,14 @@ router.post("/update-newest", async (req, res) => {
   }
 });
 
-//取得活動橫幅列表
+//A-3 清除資料並重新抓取開獎資料
+router.post("/crawer-newest", async (req, res) => {
+  const result = await Newest.deleteMany({});
+  newestCrawer();
+  return res.status(200).send({ status: true, message: "爬蟲資料成功" });
+});
+
+//A-4 取得活動橫幅列表
 router.get("/banner-list", async (req, res) => {
   try {
     const data = await Banner.find({}).sort({ bannerID: 1 });
@@ -99,17 +101,27 @@ router.get("/banner-list", async (req, res) => {
   }
 });
 
-//新增或更新活動橫幅
+//A-5 新增或更新活動橫幅
 router.post("/update-banner", async (req, res) => {
   let { bannerID, bannerPhotoUrl, directUrl } = req.body;
 
+  if (!bannerID || bannerID > 3) {
+    return res.status(404).send({
+      status: false,
+      message: "請輸入 BannerID 或 BannerID 有誤！",
+    });
+  }
+
   try {
+    const bannerName = ["三節活動資訊", "官網消息", "開獎直播"][bannerID];
+
     const data = await Banner.findOneAndUpdate(
       {
         bannerID,
       },
       {
         bannerID,
+        bannerName,
         bannerPhotoUrl,
         directUrl,
       },
@@ -129,6 +141,129 @@ router.post("/update-banner", async (req, res) => {
     return res.status(404).send({
       status: false,
       message: "更新失敗",
+      e,
+    });
+  }
+});
+
+//A-6 新增加碼公告圖片與是否展示
+router.post("/bonus-placard", async (req, res) => {
+  let { needShow, photoUrl } = req.body;
+
+  let placard = new BonusPlacard({
+    needShow,
+    photoUrl,
+  });
+
+  try {
+    await BonusPlacard.deleteMany({});
+    let savePlacard = await placard.save();
+
+    return res.status(200).send({
+      status: true,
+      msg: "加碼公告已儲存",
+      savePlacard,
+    });
+  } catch (e) {
+    return res.status(500).send({
+      status: false,
+      msg: "Server Error",
+    });
+  }
+});
+
+//A-7 取得加碼公告圖片與是否展示
+router.get("/bonus-placard", async (req, res) => {
+  try {
+    const data = await BonusPlacard.findOne({});
+
+    if (data) {
+      return res.status(200).send({
+        status: true,
+        message: "加碼活動公告圖片是否展示",
+        data,
+      });
+    } else {
+      return res.status(200).send({
+        status: true,
+        message: "查無任何活動公告圖片",
+      });
+    }
+  } catch (e) {
+    return res.status(500).send({
+      status: false,
+      message: "server error",
+      e,
+    });
+  }
+});
+
+//A-8 取得加碼開獎資訊
+router.get("/bonus-info", async (req, res) => {
+  try {
+    const data = await BonusInfo.findOne({});
+
+    if (data) {
+      return res.status(200).send({
+        status: true,
+        message: "成功取得加碼開獎資訊",
+        data,
+      });
+    } else {
+      return res.status(200).send({
+        status: true,
+        message: "查無加碼開獎資訊",
+      });
+    }
+  } catch (e) {
+    return res.status(500).send({
+      status: false,
+      message: "Server Error",
+      e,
+    });
+  }
+});
+
+//A-9 新增加碼開獎資訊
+router.post("/bonus-info", async (req, res) => {
+  let { directUrl, festivalID } = req.body;
+  try {
+    if (festivalID > 2) {
+      return res.status(404).send({
+        status: false,
+        message: "festivalID 輸入錯誤",
+      });
+    }
+
+    let isNewYear = festivalID == 0,
+      isDragonBoatFestival = festivalID == 1,
+      isMoonFestival = festivalID == 2;
+
+    let bonusInfo = new BonusInfo({
+      directUrl,
+      isDragonBoatFestival,
+      isMoonFestival,
+      isNewYear,
+    });
+
+    const data = await bonusInfo.save();
+
+    if (data) {
+      return res.status(200).send({
+        status: true,
+        message: "成功新增加碼開獎資訊",
+        data,
+      });
+    } else {
+      return res.status(200).send({
+        status: true,
+        message: "新增失敗",
+      });
+    }
+  } catch (e) {
+    return res.status(500).send({
+      status: false,
+      message: "Server Error",
       e,
     });
   }

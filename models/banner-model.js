@@ -8,19 +8,23 @@ const bannerSchema = new Schema({
   bannerID: {
     type: Number,
     enum: [0, 1, 2],
-    require: true,
+    required: true,
+  },
+  //橫幅名稱
+  bannerName: {
+    type: String,
   },
 
   //活動圖片網址
   bannerPhotoUrl: {
     type: String,
-    require: true,
+    required: true,
   },
 
   //活動導向網址
   directUrl: {
     type: String,
-    require: true,
+    required: true,
   },
 
   //更新時間

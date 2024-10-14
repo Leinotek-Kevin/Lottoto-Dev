@@ -8,7 +8,7 @@ const newestSchema = new Schema({
     type: Number,
     //0:大樂透 1:威力彩 2:今彩539 5:三星彩 6:四星彩
     enum: [0, 1, 2, 5, 6],
-    require: true,
+    required: true,
   },
 
   //期數
