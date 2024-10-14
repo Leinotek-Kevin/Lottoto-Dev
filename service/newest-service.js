@@ -9,7 +9,18 @@ const fetch = () => {
 //設定每天執行
 const startFetching = () => {
   const now = new Date();
-  const startHour = 10; //8PM
+  const startHour = 9; //8PM
+
+  console.log(
+    "目前小時" +
+      now.getHours() +
+      " " +
+      (now.getHours() === startHour) +
+      " " +
+      (now.getMinutes() >= 30) +
+      " " +
+      !isFetching
+  );
 
   if (now.getHours() === startHour && now.getMinutes() >= 30 && !isFetching) {
     console.log("進入抓取時間範圍內");
