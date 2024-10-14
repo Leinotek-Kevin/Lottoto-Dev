@@ -17,7 +17,7 @@ const startFetching = () => {
       " " +
       (now.getHours() === startHour) +
       " " +
-      (now.getMinutes() >= 40) +
+      (now.getMinutes() >= 30) +
       " " +
       !isFetching
   );

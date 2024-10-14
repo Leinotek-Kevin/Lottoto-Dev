@@ -3,8 +3,7 @@ const app = express();
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 dotenv.config();
-const lottoRoute = require("./routes").lotto;
-const fortuneRoute = require("./routes").fortune;
+const routes = require("./routes");
 const cors = require("cors");
 const port = process.env.PORT || 8080;
 
@@ -32,8 +31,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 //Handle Router
-app.use("/api/lotto", lottoRoute);
-app.use("/api/fortune", fortuneRoute);
+app.use("/api/lotto", routes.lotto);
+app.use("/api/fortune", routes.fortune);
+app.use("/api/cloudmsg", routes.cloudmsg);
 
 //監聽 http request
 app.listen(port, () => {

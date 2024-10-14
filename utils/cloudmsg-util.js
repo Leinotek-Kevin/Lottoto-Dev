@@ -1,4 +1,3 @@
-const { response } = require("express");
 const admin = require("firebase-admin");
 const typeNames = ["大樂透", "威力彩", "今彩539", "", "", "三星彩", "四星彩"];
 
@@ -8,22 +7,25 @@ class CloudMsgService {
     let { type, number } = data;
 
     const message = {
+      token: token, // 設備的 FCM token
       notification: {
-        title: typeNames[Number(type)] + "開獎嚕！",
+        title: typeNames[Number(type)] + "開獎囉！",
         body: "快來看看有沒有中獎喔！",
       },
       data: {
         type: type.toString(),
-        number,
+        number: number,
       },
     };
 
     // 發送到指定設備
     try {
-      const response = await admin.messaging().sendToDevice(token, message);
-      console.log("推播設備成功" + message.notification.title, response);
+      const response = await admin.messaging().send(message);
+      console.log("推播設備成功：" + message.notification.title, response);
+      return true;
     } catch (e) {
       console.log("推播設備失敗", e);
+      return true;
     }
   }
 

@@ -44,6 +44,7 @@ async function getAmount(url) {
     .eq(1)
     .text()
     .match(/(\d+(\.\d+)?)/)[0];
+
   return result;
 }
 

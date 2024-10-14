@@ -1,12 +1,7 @@
 const router = require("express").Router();
-const Newest = require("../models/newest-model");
+const Newest = require("../models").newest;
+const Banner = require("../models").banner;
 const newestCrawer = require("../crawer/newest");
-const cloudmsg = require("../utils/cloudmsg-util");
-
-router.use((req, res, next) => {
-  console.log("正在接收一個跟樂透相關的 request");
-  next();
-});
 
 //獲取最新的開獎獎號
 router.get("/newest", async (req, res) => {
@@ -39,17 +34,6 @@ router.post("/crawer-newest", async (req, res) => {
   const result = await Newest.deleteMany({});
   newestCrawer();
   return res.status(200).send({ status: true, message: "爬蟲資料成功" });
-});
-
-router.get("/cloudmsg", async (req, res) => {
-  const result = await cloudmsg.sendMsgToTopic("newest", {
-    type: 0,
-    number: "1,2,3",
-  });
-
-  return res
-    .status(200)
-    .send({ status: true, message: "爬蟲資料成功", result });
 });
 
 //更新指定彩券類型資料(不會發推播)
@@ -86,6 +70,67 @@ router.post("/update-newest", async (req, res) => {
     return res
       .status(500)
       .send({ status: true, message: "資料更新失敗", error });
+  }
+});
+
+//取得活動橫幅列表
+router.get("/banner-list", async (req, res) => {
+  try {
+    const data = await Banner.find({}).sort({ bannerID: 1 });
+
+    if (data || data.length == 0) {
+      return res.status(200).send({
+        status: true,
+        message: "查無任何活動 Banner List",
+        data: [],
+      });
+    } else {
+      return res.status(200).send({
+        status: true,
+        message: "成功獲得活動 Banner List",
+        data,
+      });
+    }
+  } catch (e) {
+    return res.status(500).send({
+      status: false,
+      message: "Server Error",
+    });
+  }
+});
+
+//新增或更新活動橫幅
+router.post("/update-banner", async (req, res) => {
+  let { bannerID, bannerPhotoUrl, directUrl } = req.body;
+
+  try {
+    const data = await Banner.findOneAndUpdate(
+      {
+        bannerID,
+      },
+      {
+        bannerID,
+        bannerPhotoUrl,
+        directUrl,
+      },
+      {
+        upsert: true,
+        new: true,
+        setDefaultsOnInsert: true,
+      }
+    );
+
+    return res.status(200).send({
+      status: true,
+      message: "更新活動 Banner 成功",
+      data,
+    });
+  } catch (e) {
+    return res.status(404).send({
+      status: false,
+      message: "更新失敗",
+      e,
+    });
   }
 });
 
