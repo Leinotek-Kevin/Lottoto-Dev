@@ -13,7 +13,7 @@ const serviceAccount =
     ? require("./google-account-key.json")
     : JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS);
 
-require("./service/newest-service");
+//require("./service/newest-service");
 
 //連結 mongoDB
 mongoose
