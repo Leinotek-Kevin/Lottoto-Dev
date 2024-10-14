@@ -9,7 +9,7 @@ const fetch = () => {
 //設定每天執行
 const startFetching = () => {
   const now = new Date();
-  const startHour = 9; //8PM
+  const startHour = 10; //8PM
 
   console.log(
     "目前小時" +
