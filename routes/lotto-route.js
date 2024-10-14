@@ -78,7 +78,7 @@ router.get("/banner-list", async (req, res) => {
   try {
     const data = await Banner.find({}).sort({ bannerID: 1 });
 
-    if (data || data.length == 0) {
+    if (data == null || data.length == 0) {
       return res.status(200).send({
         status: true,
         message: "查無任何活動 Banner List",
