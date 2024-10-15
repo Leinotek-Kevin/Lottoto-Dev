@@ -50,7 +50,7 @@ const recordSchema = new Schema({
   },
 });
 // 添加唯一複合索引
-// recordSchema.index({ type: 1, issue: 1 }, { unique: true });
+recordSchema.index({ type: 1, issue: -1 });
 
 // 添加唯一索引
 // recordSchema.index({ type: 1 }, { unique: true });

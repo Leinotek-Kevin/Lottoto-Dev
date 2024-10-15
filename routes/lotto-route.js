@@ -12,18 +12,26 @@ const recordCrawer = require("../crawer/record-crawer");
 //A-1 獲取最新的開獎獎號
 router.get("/newest", async (req, res) => {
   try {
-    const result = await Newest.find({}).sort({ type: 1 });
-    if (result == null || result.length == 0) {
+    let data = [];
+
+    for (let i = 0; i < 7; i++) {
+      if (i != 3 && i != 4) {
+        const result = await Record.findOne({ type: i });
+        data.push(result);
+      }
+    }
+
+    if (data && data.length > 0) {
       return res.status(200).send({
         status: true,
-        message: "找不到任何彩券資料喔！",
-        data: [],
+        message: "成功獲得最新開獎資訊",
+        data,
       });
     } else {
       return res.status(200).send({
         status: true,
-        message: "成功獲取彩券資料",
-        data: result,
+        message: "查無任何最新開獎資訊",
+        data: [],
       });
     }
   } catch (e) {
