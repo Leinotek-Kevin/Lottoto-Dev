@@ -1,4 +1,3 @@
-//const admin = require("firebase-admin");
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
@@ -7,6 +6,7 @@ dotenv.config();
 const routes = require("./routes");
 const cors = require("cors");
 const port = process.env.PORT || 8080;
+const admin = require("./utils/checkAdmin-util");
 
 require("./service/newest-service");
 
