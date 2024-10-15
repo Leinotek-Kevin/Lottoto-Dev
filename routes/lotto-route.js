@@ -1,12 +1,13 @@
 const router = require("express").Router();
 const Newest = require("../models").newest;
+const Record = require("../models").record;
 const Banner = require("../models").banner;
 const BonusPlacard = require("../models").bonusPlacard;
 const BonusInfo = require("../models").bonusInfo;
 const Store = require("../models").store;
+const CrawerUrl = require("../models").crawerUrl;
 const newestCrawer = require("../crawer/newest-crawer");
-
-// const staticReader = require("../crawer/station");
+const recordCrawer = require("../crawer/record-crawer");
 
 //A-1 獲取最新的開獎獎號
 router.get("/newest", async (req, res) => {
@@ -73,9 +74,74 @@ router.post("/update-newest", async (req, res) => {
 
 //A-3 清除資料並重新抓取開獎資料
 router.post("/crawer-newest", async (req, res) => {
-  const result = await Newest.deleteMany({});
+  const result = await Newest.deleteMany();
   newestCrawer();
   return res.status(200).send({ status: true, message: "爬蟲資料成功" });
+});
+
+//取得指定類型的歷史紀錄
+router.post("/history-record", async (req, res) => {
+  let { type } = req.body;
+  try {
+    const data = await Record.find({ type }).sort({ issue: -1 });
+    console.log(data);
+
+    if (data) {
+      return res.status(200).send({
+        status: true,
+        message: "成功獲得指定類型歷史紀錄",
+        data,
+      });
+    } else {
+      return res.status(200).send({
+        status: true,
+        message: "查無任何歷史紀錄",
+        data: [],
+      });
+    }
+  } catch (e) {
+    return res.status(500).send({
+      status: false,
+      message: "Server Error",
+    });
+  }
+});
+
+//重置並爬蟲所有類型的歷史開獎紀錄
+router.post("/crawer-record", async (req, res) => {
+  recordCrawer();
+  return res.status(200).send({ status: true, message: "爬蟲資料成功" });
+});
+
+//設置指定爬蟲網址
+router.post("/crawer-url", async (req, res) => {
+  let { type, url } = req.body;
+  try {
+    const data = await CrawerUrl.findOneAndUpdate(
+      { crawerType: type },
+      {
+        crawerType: type,
+        crawerUrl: url,
+      },
+      {
+        upsert: true, // 如果找不到就新增
+        new: true, // 返回更新後的文件
+        setDefaultsOnInsert: true, // 插入時應用預設值
+      }
+    );
+
+    return res.status(200).send({
+      status: true,
+      message: "網址設置成功",
+      data,
+    });
+  } catch (e) {
+    return res.status(500).send({
+      status: false,
+      message: "Server Error",
+      e,
+    });
+  }
 });
 
 //A-4 取得活動橫幅列表
