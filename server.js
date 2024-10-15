@@ -6,14 +6,9 @@ dotenv.config();
 const routes = require("./routes");
 const cors = require("cors");
 const port = process.env.PORT || 8080;
-
 const admin = require("firebase-admin");
-const serviceAccount =
-  port == 8080
-    ? require("./google-account-key.json")
-    : JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS);
 
-//require("./service/newest-service");
+require("./service/newest-service");
 
 //連結 mongoDB
 mongoose
@@ -38,9 +33,4 @@ app.use("/api/cloudmsg", routes.cloudmsg);
 //監聽 http request
 app.listen(port, () => {
   console.log("後端伺服器聆聽中....");
-});
-
-//初始化 firebase admin
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
 });

@@ -3,7 +3,10 @@ const Newest = require("../models").newest;
 const Banner = require("../models").banner;
 const BonusPlacard = require("../models").bonusPlacard;
 const BonusInfo = require("../models").bonusInfo;
-const newestCrawer = require("../crawer/newest");
+const Store = require("../models").store;
+const newestCrawer = require("../crawer/newest-crawer");
+
+// const staticReader = require("../crawer/station");
 
 //A-1 獲取最新的開獎獎號
 router.get("/newest", async (req, res) => {
@@ -258,6 +261,31 @@ router.post("/bonus-info", async (req, res) => {
       return res.status(200).send({
         status: true,
         message: "新增失敗",
+      });
+    }
+  } catch (e) {
+    return res.status(500).send({
+      status: false,
+      message: "Server Error",
+      e,
+    });
+  }
+});
+
+router.get("/stores", async (req, res) => {
+  try {
+    const data = await Store.find({}).sort({ name: 1 });
+    if (data) {
+      return res.status(200).send({
+        status: true,
+        message: "成功獲取商家資訊",
+        data,
+      });
+    } else {
+      return res.status(200).send({
+        status: true,
+        message: "查無任何商家資訊",
+        data: [],
       });
     }
   } catch (e) {
