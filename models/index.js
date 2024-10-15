@@ -6,4 +6,5 @@ module.exports = {
   store: require("./store-model"),
   record: require("./record.model"),
   crawerUrl: require("./crawerurl-model"),
+  fortune: require("./fortune.model"),
 };

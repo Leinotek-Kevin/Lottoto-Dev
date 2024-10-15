@@ -7,8 +7,9 @@ const routes = require("./routes");
 const cors = require("cors");
 const port = process.env.PORT || 8080;
 const admin = require("./utils/checkAdmin-util");
+const fortuneService = require("./crawer/fortune-crawer");
 
-require("./service/newest-service");
+//require("./service/newest-service");
 
 //連結 mongoDB
 mongoose
