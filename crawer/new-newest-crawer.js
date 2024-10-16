@@ -163,7 +163,11 @@ const updateNewestAndRecord = async (data) => {
       setDefaultsOnInsert: true, // 插入時應用預設值
     });
 
-    const recordResult = await Record.create(data);
+    await Record.create(data);
+    await Record.findOneAndDelete(
+      { type }, // 查找條件
+      { sort: { issue: 1 } } // 按 issue 升序排序
+    );
 
     cloudmsg.sendMsgToTopic("newest", data);
   } catch (e) {

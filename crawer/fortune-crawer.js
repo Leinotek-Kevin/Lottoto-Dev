@@ -5,9 +5,10 @@ const Fortune = require("../models").fortune;
 //每日運勢爬蟲
 const getAllFortuneInfo = async () => {
   try {
-    const today = new Date().toISOString().split("T")[0];
+    const today = getTaiwanDate();
 
-    const recordDate = await Fortune.findOne({ recordDate: today });
+    const aquius = await Fortune.findOne({ elementID: 11 });
+    const recordDate = aquius.recordDate;
 
     let needFetch = false;
 
@@ -206,5 +207,21 @@ const getAllFortuneInfo = async () => {
     console.log("運勢爬蟲有問題" + e);
   }
 };
+
+function getTaiwanDate() {
+  // 獲取當前 UTC 時間
+  const now = new Date();
+
+  // 計算台灣的 UTC+8 時間
+  const taiwanTime = new Date(now.getTime() + 8 * 60 * 60 * 1000);
+
+  // 取得年份、月份和日期
+  const year = taiwanTime.getFullYear();
+  const month = String(taiwanTime.getMonth() + 1).padStart(2, "0"); // 月份從 0 開始
+  const day = String(taiwanTime.getDate()).padStart(2, "0");
+
+  // 返回格式化的日期
+  return `${year}-${month}-${day}`;
+}
 
 module.exports = getAllFortuneInfo;
