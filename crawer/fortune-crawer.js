@@ -16,7 +16,7 @@ const getAllFortuneInfo = async () => {
       needFetch = true;
       console.log("星座運勢：" + "資料庫沒有記錄日期->直接灌資料");
     } else {
-      if (today > new Date(recordDate)) {
+      if (new Date(today) > new Date(recordDate)) {
         //今天的日期大於資料庫記錄的日期
         needFetch = true;
         console.log(
