@@ -35,115 +35,7 @@ router.get("/newest", async (req, res) => {
   }
 });
 
-//A-2 更新指定彩券類型資料(不會發推播)
-router.post("/update-newest", async (req, res) => {
-  let { type, issue, number, specialNumber, date, prizeAmount } = req.body;
-
-  try {
-    // 使用 upsert，查詢是否有相同的 type，沒有則新增，有則更新
-    const result = await Newest.findOneAndUpdate(
-      { type },
-      // { type, issue: { $lt: issue } },
-      // 查詢條件{type 是主要條件 / issue 是次要條件}
-      // 當找不到 type 的時候，就會判定找不到該資料，就執行新增
-      // 只有當資料庫中的 issue 小於新 issue 時才更新
-      {
-        type, // 更新或插入的欄位
-        issue,
-        number,
-        specialNumber,
-        date,
-        prizeAmount,
-      },
-      {
-        upsert: true, // 如果找不到就新增
-        new: true, // 返回更新後的文件
-        setDefaultsOnInsert: true, // 插入時應用預設值
-      }
-    );
-
-    return res
-      .status(200)
-      .send({ status: true, message: "資料更新成功", result });
-  } catch (error) {
-    return res
-      .status(500)
-      .send({ status: true, message: "資料更新失敗", error });
-  }
-});
-
-//A-3 清除資料並重新抓取開獎資料
-router.post("/crawer-newest", async (req, res) => {
-  const result = await Newest.deleteMany();
-  newestCrawer();
-  return res.status(200).send({ status: true, message: "爬蟲資料成功" });
-});
-
-//取得指定類型的歷史紀錄
-router.post("/history-record", async (req, res) => {
-  let { type } = req.body;
-  try {
-    const data = await Record.find({ type }).sort({ issue: -1 });
-
-    if (data) {
-      return res.status(200).send({
-        status: true,
-        message: "成功獲得指定類型歷史紀錄",
-        data,
-      });
-    } else {
-      return res.status(200).send({
-        status: true,
-        message: "查無任何歷史紀錄",
-        data: [],
-      });
-    }
-  } catch (e) {
-    return res.status(500).send({
-      status: false,
-      message: "Server Error",
-    });
-  }
-});
-
-//重置並爬蟲所有類型的歷史開獎紀錄
-router.post("/crawer-record", async (req, res) => {
-  recordCrawer();
-  return res.status(200).send({ status: true, message: "爬蟲資料成功" });
-});
-
-//設置指定爬蟲網址
-router.post("/crawer-url", async (req, res) => {
-  let { type, url } = req.body;
-  try {
-    const data = await CrawerUrl.findOneAndUpdate(
-      { crawerType: type },
-      {
-        crawerType: type,
-        crawerUrl: url,
-      },
-      {
-        upsert: true, // 如果找不到就新增
-        new: true, // 返回更新後的文件
-        setDefaultsOnInsert: true, // 插入時應用預設值
-      }
-    );
-
-    return res.status(200).send({
-      status: true,
-      message: "網址設置成功",
-      data,
-    });
-  } catch (e) {
-    return res.status(500).send({
-      status: false,
-      message: "Server Error",
-      e,
-    });
-  }
-});
-
-//A-4 取得活動橫幅列表
+//A-2-1 取得活動橫幅列表
 router.get("/banner-list", async (req, res) => {
   try {
     const data = await Banner.find({}).sort({ bannerID: 1 });
@@ -169,7 +61,7 @@ router.get("/banner-list", async (req, res) => {
   }
 });
 
-//A-5 新增或更新活動橫幅
+//A-2-2 新增或更新活動橫幅
 router.post("/update-banner", async (req, res) => {
   let { bannerID, bannerPhotoUrl, directUrl } = req.body;
 
@@ -214,33 +106,7 @@ router.post("/update-banner", async (req, res) => {
   }
 });
 
-//A-6 新增加碼公告圖片與是否展示
-router.post("/bonus-placard", async (req, res) => {
-  let { needShow, photoUrl } = req.body;
-
-  let placard = new BonusPlacard({
-    needShow,
-    photoUrl,
-  });
-
-  try {
-    await BonusPlacard.deleteMany({});
-    let savePlacard = await placard.save();
-
-    return res.status(200).send({
-      status: true,
-      msg: "加碼公告已儲存",
-      savePlacard,
-    });
-  } catch (e) {
-    return res.status(500).send({
-      status: false,
-      msg: "Server Error",
-    });
-  }
-});
-
-//A-7 取得加碼公告圖片與是否展示
+//A-3-1 取得加碼公告圖片與是否展示
 router.get("/bonus-placard", async (req, res) => {
   try {
     const data = await BonusPlacard.findOne({});
@@ -266,7 +132,33 @@ router.get("/bonus-placard", async (req, res) => {
   }
 });
 
-//A-8 取得加碼開獎資訊
+//A-3-2 新增加碼公告圖片與是否展示
+router.post("/bonus-placard", async (req, res) => {
+  let { needShow, photoUrl } = req.body;
+
+  let placard = new BonusPlacard({
+    needShow,
+    photoUrl,
+  });
+
+  try {
+    await BonusPlacard.deleteMany({});
+    let savePlacard = await placard.save();
+
+    return res.status(200).send({
+      status: true,
+      msg: "加碼公告已儲存",
+      savePlacard,
+    });
+  } catch (e) {
+    return res.status(500).send({
+      status: false,
+      msg: "Server Error",
+    });
+  }
+});
+
+//A-4-1 取得加碼開獎資訊
 router.get("/bonus-info", async (req, res) => {
   try {
     const data = await BonusInfo.findOne({});
@@ -292,7 +184,7 @@ router.get("/bonus-info", async (req, res) => {
   }
 });
 
-//A-9 新增加碼開獎資訊
+//A-4-2 新增加碼開獎資訊
 router.post("/bonus-info", async (req, res) => {
   let { directUrl, festivalID } = req.body;
   try {
@@ -337,6 +229,7 @@ router.post("/bonus-info", async (req, res) => {
   }
 });
 
+//A-6 取得彩券行列表
 router.get("/stores", async (req, res) => {
   try {
     const data = await Store.find({}).sort({ name: 1 });
@@ -353,6 +246,114 @@ router.get("/stores", async (req, res) => {
         data: [],
       });
     }
+  } catch (e) {
+    return res.status(500).send({
+      status: false,
+      message: "Server Error",
+      e,
+    });
+  }
+});
+
+//A-7 取得指定類型的歷史紀錄
+router.post("/history-record", async (req, res) => {
+  let { type } = req.body;
+  try {
+    const data = await Record.find({ type }).sort({ issue: -1 });
+
+    if (data) {
+      return res.status(200).send({
+        status: true,
+        message: "成功獲得指定類型歷史紀錄",
+        data,
+      });
+    } else {
+      return res.status(200).send({
+        status: true,
+        message: "查無任何歷史紀錄",
+        data: [],
+      });
+    }
+  } catch (e) {
+    return res.status(500).send({
+      status: false,
+      message: "Server Error",
+    });
+  }
+});
+
+//A-8 更新指定彩券類型資料(不會發推播)
+router.post("/update-newest", async (req, res) => {
+  let { type, issue, number, specialNumber, date, prizeAmount } = req.body;
+
+  try {
+    // 使用 upsert，查詢是否有相同的 type，沒有則新增，有則更新
+    const result = await Newest.findOneAndUpdate(
+      { type },
+      // { type, issue: { $lt: issue } },
+      // 查詢條件{type 是主要條件 / issue 是次要條件}
+      // 當找不到 type 的時候，就會判定找不到該資料，就執行新增
+      // 只有當資料庫中的 issue 小於新 issue 時才更新
+      {
+        type, // 更新或插入的欄位
+        issue,
+        number,
+        specialNumber,
+        date,
+        prizeAmount,
+      },
+      {
+        upsert: true, // 如果找不到就新增
+        new: true, // 返回更新後的文件
+        setDefaultsOnInsert: true, // 插入時應用預設值
+      }
+    );
+
+    return res
+      .status(200)
+      .send({ status: true, message: "資料更新成功", result });
+  } catch (error) {
+    return res
+      .status(500)
+      .send({ status: true, message: "資料更新失敗", error });
+  }
+});
+
+//清除資料並重新抓取開獎資料
+router.post("/crawer-newest", async (req, res) => {
+  const result = await Newest.deleteMany();
+  newestCrawer();
+  return res.status(200).send({ status: true, message: "爬蟲資料成功" });
+});
+
+//重置並爬蟲所有類型的歷史開獎紀錄
+router.post("/crawer-record", async (req, res) => {
+  recordCrawer();
+  return res.status(200).send({ status: true, message: "爬蟲資料成功" });
+});
+
+//設置指定爬蟲網址
+router.post("/crawer-url", async (req, res) => {
+  let { type, url } = req.body;
+  try {
+    const data = await CrawerUrl.findOneAndUpdate(
+      { crawerType: type },
+      {
+        crawerType: type,
+        crawerUrl: url,
+      },
+      {
+        upsert: true, // 如果找不到就新增
+        new: true, // 返回更新後的文件
+        setDefaultsOnInsert: true, // 插入時應用預設值
+      }
+    );
+
+    return res.status(200).send({
+      status: true,
+      message: "網址設置成功",
+      data,
+    });
   } catch (e) {
     return res.status(500).send({
       status: false,

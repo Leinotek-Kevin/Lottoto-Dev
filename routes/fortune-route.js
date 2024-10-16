@@ -7,6 +7,7 @@ router.use((req, res, next) => {
   next();
 });
 
+//B-1 獲取指定星座運勢
 router.post("/daily-info", async (req, res) => {
   let { id } = req.body;
 
