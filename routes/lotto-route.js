@@ -84,7 +84,6 @@ router.post("/history-record", async (req, res) => {
   let { type } = req.body;
   try {
     const data = await Record.find({ type }).sort({ issue: -1 });
-    console.log(data);
 
     if (data) {
       return res.status(200).send({

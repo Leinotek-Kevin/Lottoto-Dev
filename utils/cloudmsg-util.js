@@ -32,11 +32,21 @@ class CloudMsgService {
   // 發送推播(針對主題)
   static async sendMsgToTopic(topic, newData) {
     let { type, number } = newData;
+    let typeName = typeNames[Number(type)];
+
+    if (type == 5) {
+      //三星彩不發推播
+      return "不發推播";
+    }
+
+    if (type == 6) {
+      typeName = "三星彩,四星彩";
+    }
 
     const message = {
       notification: {
-        title: typeNames[Number(type)] + "開獎嚕！",
-        body: "快來看看有沒有中獎喔！",
+        title: "《" + typeName + "》" + " 最新獎號更新囉✨",
+        body: "快來看看你有沒有中獎！",
       },
       data: {
         type: type.toString(),

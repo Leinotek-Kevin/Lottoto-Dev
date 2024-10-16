@@ -57,6 +57,8 @@ const fortuneSchema = new Schema({
   healthFortuneDetail: String,
   //每日建議敘述
   dailySuggestion: String,
+  //星座運勢日期
+  recordDate: String,
 
   //更新時間
   updateTime: {
