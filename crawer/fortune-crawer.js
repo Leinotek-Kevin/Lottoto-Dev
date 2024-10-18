@@ -27,6 +27,10 @@ const getAllFortuneInfo = async () => {
     }
 
     if (needFetch) {
+      console.log("星座運勢：" + "不執行爬蟲");
+
+      await Fortune.deleteMany();
+
       let fortuneInfos = [];
 
       for (let i = 1; i < 13; i++) {
@@ -201,7 +205,9 @@ const getAllFortuneInfo = async () => {
       //將運勢資料存入DB
       await Fortune.deleteMany();
       const result = await Fortune.insertMany(fortuneInfos);
-      //console.log("將運勢資料存入DB:" + result);
+      console.log("將運勢資料存入DB:" + result);
+    } else {
+      console.log("星座運勢：" + "不執行爬蟲");
     }
   } catch (e) {
     console.log("運勢爬蟲有問題" + e);
