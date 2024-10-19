@@ -10,6 +10,6 @@ const startFetching = () => {
 };
 
 //部署的時候直接執行一次
-startFetching();
+//startFetching();
 //每分鐘檢查一次
 setInterval(startFetching, 60 * 1000);

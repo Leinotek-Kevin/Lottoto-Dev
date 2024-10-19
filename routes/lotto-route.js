@@ -6,7 +6,7 @@ const BonusPlacard = require("../models").bonusPlacard;
 const BonusInfo = require("../models").bonusInfo;
 const Store = require("../models").store;
 const CrawerUrl = require("../models").crawerUrl;
-const newestCrawer = require("../crawer/newest-crawer");
+const newestCrawer = require("../crawer/force-newest-crawer.js");
 const recordCrawer = require("../crawer/record-crawer");
 
 //A-1 獲取最新的開獎獎號

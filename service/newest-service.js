@@ -1,4 +1,4 @@
-const newestCrawer = require("../crawer/new-newest-crawer");
+const newestCrawer = require("../crawer/newest-crawer");
 
 let isFetchingLock = false; //狀態變數
 

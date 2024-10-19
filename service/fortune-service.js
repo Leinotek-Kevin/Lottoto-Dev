@@ -6,14 +6,14 @@ const fetch = () => {
   fortuneCrawer();
 };
 
-//設定每天 00:00-00:30 期間每10分鐘抓一次
+//設定每天 00:10-00:40 期間每10分鐘抓一次
 const startFetching = () => {
   const now = new Date();
   const startHour = 0; //午夜 12 點
 
   if (
     now.getHours() === startHour &&
-    now.getMinutes() >= 0 &&
+    now.getMinutes() >= 10 &&
     !isFetchingLock
   ) {
     console.log("星座運勢：進入抓取時間範圍內");
