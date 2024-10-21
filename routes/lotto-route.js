@@ -191,7 +191,7 @@ router.get("/bonus-info", async (req, res) => {
 
 //A-4-2 新增加碼開獎資訊
 router.post("/bonus-info", async (req, res) => {
-  let { directUrl, festivalID } = req.body;
+  let { directUrl, festivalID, needShow } = req.body;
   try {
     if (festivalID > 2) {
       return res.status(404).send({
@@ -200,9 +200,9 @@ router.post("/bonus-info", async (req, res) => {
       });
     }
 
-    let isNewYear = festivalID == 0,
-      isDragonBoatFestival = festivalID == 1,
-      isMoonFestival = festivalID == 2;
+    let isNewYear = needShow == "1" && festivalID == 0,
+      isDragonBoatFestival = needShow == "1" && festivalID == 1,
+      isMoonFestival = needShow == "1" && festivalID == 2;
 
     let bonusInfo = new BonusInfo({
       directUrl,
