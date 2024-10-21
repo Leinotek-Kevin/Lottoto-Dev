@@ -6,6 +6,7 @@ const BonusPlacard = require("../models").bonusPlacard;
 const BonusInfo = require("../models").bonusInfo;
 const Store = require("../models").store;
 const CrawerUrl = require("../models").crawerUrl;
+const Config = require("../models").config;
 const newestCrawer = require("../crawer/force-newest-crawer.js");
 const recordCrawer = require("../crawer/record-crawer");
 
@@ -13,17 +14,21 @@ const recordCrawer = require("../crawer/record-crawer");
 router.get("/newest", async (req, res) => {
   try {
     const result = await Newest.find({}).sort({ type: 1 });
+    const config = await Config.findOne({});
+
     if (result == null || result.length == 0) {
       return res.status(200).send({
         status: true,
         message: "找不到任何彩券資料喔！",
         data: [],
+        config,
       });
     } else {
       return res.status(200).send({
         status: true,
         message: "成功獲取彩券資料",
         data: result,
+        config,
       });
     }
   } catch (e) {

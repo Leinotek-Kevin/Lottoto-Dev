@@ -7,4 +7,5 @@ module.exports = {
   record: require("./record.model"),
   crawerUrl: require("./crawerurl-model"),
   fortune: require("./fortune.model"),
+  config: require("./config-model"),
 };

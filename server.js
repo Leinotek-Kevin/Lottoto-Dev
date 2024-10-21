@@ -30,6 +30,7 @@ app.use(cors());
 app.use("/api/lotto", routes.lotto);
 app.use("/api/fortune", routes.fortune);
 app.use("/api/cloudmsg", routes.cloudmsg);
+app.use("/api/config", routes.config);
 
 //監聽 http request
 app.listen(port, () => {
