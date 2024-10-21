@@ -177,7 +177,26 @@ const getAllFortuneInfo = async () => {
 
         if (needFetch) {
           console.log("星座運勢：" + "資料庫資料允許更新");
+
           try {
+            // 將 timestamp 轉換成 Date 物件
+            const date = new Date();
+
+            // 定義選項來格式化日期
+            const options = {
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+              weekday: "short",
+            };
+
+            // 使用 toLocaleDateString 格式化
+            const updateDate = date
+              .toLocaleDateString("zh-TW", options)
+              .replace("週", "")
+              .replace("）", ")")
+              .replace("（", "(");
+
             const result = await Fortune.findOneAndUpdate(
               {
                 elementID,
@@ -207,6 +226,7 @@ const getAllFortuneInfo = async () => {
                 moneyFortuneDetail,
                 healthFortuneDetail,
                 dailySuggestion,
+                updateDate,
               },
               {
                 upsert: true, // 如果找不到就新增

@@ -22,29 +22,10 @@ router.post("/daily-info", async (req, res) => {
     const data = await Fortune.findOne({ elementID: id });
 
     if (data) {
-      // 將 timestamp 轉換成 Date 物件
-      const date = new Date(data.updateTime);
-
-      // 定義選項來格式化日期
-      const options = {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-        weekday: "short",
-      };
-
-      // 使用 toLocaleDateString 格式化
-      const updateDate = date
-        .toLocaleDateString("zh-TW", options)
-        .replace("週", "")
-        .replace("）", ")")
-        .replace("（", "(");
-
       return res.status(200).send({
         status: true,
         message: "成功獲取指定星座運勢資料",
         data,
-        updateDate,
       });
     } else {
       return res.status(200).send({
@@ -62,6 +43,7 @@ router.post("/daily-info", async (req, res) => {
 
 router.post("/crawer-fortune", async (req, res) => {
   try {
+    await Fortune.deleteMany();
     fortuneCrawer();
     return res.status(200).send({
       status: true,

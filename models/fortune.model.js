@@ -59,6 +59,8 @@ const fortuneSchema = new Schema({
   dailySuggestion: String,
   //星座運勢日期
   recordDate: String,
+  //星座運勢更新日期
+  updateDate: String,
 
   //更新時間
   updateTime: {
