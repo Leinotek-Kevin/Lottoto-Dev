@@ -1,5 +1,7 @@
 const newestService = require("./newest-service");
 const fortuneService = require("./fortune-service");
+const dotenv = require("dotenv");
+dotenv.config();
 
 //設定每天執行
 const startFetching = () => {
@@ -12,4 +14,9 @@ const startFetching = () => {
 //部署的時候直接執行一次
 //startFetching();
 //每分鐘檢查一次
-setInterval(startFetching, 60 * 1000);
+if (process.env.HEROKU_ENV !== "DEBUG") {
+  console.log("正式站啟動定時服務");
+  setInterval(startFetching, 60 * 1000);
+} else {
+  console.log("開發站不啟動定時服務");
+}
