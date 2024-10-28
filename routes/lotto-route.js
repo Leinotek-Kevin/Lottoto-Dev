@@ -265,21 +265,21 @@ router.post("/history-record", async (req, res) => {
   let { type } = req.body;
   try {
     const data = await Record.find({ type }).sort({ issue: -1 });
-    const config = await Config.findOne({});
+    //const config = await Config.findOne({});
 
     if (data) {
       return res.status(200).send({
         status: true,
         message: "成功獲得指定類型歷史紀錄",
         data,
-        config,
+        // config,
       });
     } else {
       return res.status(200).send({
         status: true,
         message: "查無任何歷史紀錄",
         data: [],
-        config: {},
+        // config: {},
       });
     }
   } catch (e) {
