@@ -33,7 +33,11 @@ async function getBigAndPowerInfo(url, type) {
   let $ = cheerio.load(targetHTML.data);
 
   //累積彩金
-  const prizeAmount = $("span.title").eq(1).text().match(/(\d+)/)[0];
+  const prizeAmount = $("span.title")
+    .eq(1)
+    .text()
+    .match(/(\d+(\.\d+)?)/)[0];
+
   //開獎日期
   const date = $("span.title")
     .eq(2)
