@@ -40,4 +40,6 @@ const startFetching = () => {
   }
 };
 
-module.exports = startFetching;
+//module.exports = startFetching;
+
+startFetching();

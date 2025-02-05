@@ -371,4 +371,22 @@ router.post("/crawer-url", async (req, res) => {
   }
 });
 
+//刪除所有商店
+router.post("/delete-stores", async (req, res) => {
+  try {
+    await Store.deleteMany({});
+
+    return res.status(200).send({
+      status: true,
+      message: "刪除完畢",
+    });
+  } catch (e) {
+    return res.status(500).send({
+      status: false,
+      message: "Server Error!",
+      e,
+    });
+  }
+});
+
 module.exports = router;

@@ -9,7 +9,7 @@ const port = process.env.PORT || 8080;
 const admin = require("./utils/checkAdmin-util");
 
 //啟動服務控制中心
-require("./service");
+// require("./service");
 
 //連結 mongoDB
 mongoose

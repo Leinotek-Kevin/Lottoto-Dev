@@ -20,11 +20,25 @@ const drawUrls = [
 
 //傳入彩券類型
 const analysis = async () => {
-  getBigAndPowerInfo(drawUrls[0], 0);
-  getBigAndPowerInfo(drawUrls[1], 1);
-  get539Info(drawUrls[2], 2);
-  getStarInfo(drawUrls[3], 5);
-  getStarInfo(drawUrls[3], 6);
+  try {
+    //連結 mongoDB
+    mongoose
+      .connect(process.env.MONGODB_CONNECTION)
+      .then(() => {
+        console.log("連結到 mongoDB");
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+
+    getBigAndPowerInfo(drawUrls[0], 0);
+    getBigAndPowerInfo(drawUrls[1], 1);
+    get539Info(drawUrls[2], 2);
+    getStarInfo(drawUrls[3], 5);
+    getStarInfo(drawUrls[3], 6);
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 //取得累計金額(大樂透/威力彩)

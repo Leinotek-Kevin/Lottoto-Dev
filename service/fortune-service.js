@@ -41,4 +41,4 @@ const startFetching = () => {
   }
 };
 
-module.exports = startFetching;
+startFetching();

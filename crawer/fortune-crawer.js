@@ -5,6 +5,16 @@ const Fortune = require("../models").fortune;
 //每日運勢爬蟲
 const getAllFortuneInfo = async () => {
   try {
+    //連結 mongoDB
+    mongoose
+      .connect(process.env.MONGODB_CONNECTION)
+      .then(() => {
+        console.log("連結到 mongoDB");
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+
     const today = getTaiwanDate();
 
     for (let i = 1; i < 13; i++) {
