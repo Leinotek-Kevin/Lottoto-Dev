@@ -1,6 +1,7 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
 const Fortune = require("../models").fortune;
+const mongoose = require("mongoose");
 
 //每日運勢爬蟲
 const getAllFortuneInfo = async () => {

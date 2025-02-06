@@ -2,8 +2,9 @@ const Newest = require("../models").newest;
 const Record = require("../models").record;
 const axios = require("axios");
 const cheerio = require("cheerio");
-
 const cloudmsg = require("../utils/cloudmsg-util");
+
+const mongoose = require("mongoose");
 
 //爬取最新開獎資料並與最近一筆歷史資料比對
 //開獎資訊網址
