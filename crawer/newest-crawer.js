@@ -189,7 +189,7 @@ const updateNewestAndRecord = async (data) => {
       { sort: { issue: 1 } } // 按 issue 升序排序
     );
 
-    cloudmsg.sendMsgToTopic("newest_test", data);
+    cloudmsg.sendMsgToTopic("newest", data);
   } catch (e) {
     console.log("新增或更新樂透資料錯誤！" + e);
   }
