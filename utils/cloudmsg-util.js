@@ -1,4 +1,4 @@
-const admin = require("firebase-admin");
+const admin = require("./checkAdmin-util");
 const typeNames = ["大樂透", "威力彩", "今彩539", "", "", "三星彩", "四星彩"];
 
 class CloudMsgService {
