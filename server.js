@@ -8,9 +8,6 @@ const cors = require("cors");
 const port = process.env.PORT || 8080;
 const admin = require("./utils/checkAdmin-util");
 
-//啟動服務控制中心
-// require("./service");
-
 //連結 mongoDB
 mongoose
   .connect(process.env.MONGODB_CONNECTION)

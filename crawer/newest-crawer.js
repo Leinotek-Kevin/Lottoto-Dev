@@ -2,7 +2,6 @@ const Newest = require("../models").newest;
 const Record = require("../models").record;
 const axios = require("axios");
 const cheerio = require("cheerio");
-const admin = require("./utils/checkAdmin-util");
 const cloudmsg = require("../utils/cloudmsg-util");
 
 const mongoose = require("mongoose");
